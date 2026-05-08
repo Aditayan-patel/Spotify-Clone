@@ -1,4 +1,5 @@
 
+import type { AuthenticatedRequest } from "./middelWare.js";
 import { User } from "./model.js";
 import  TryCatch from "./TryCatch.js";
 import bcrypt from 'bcrypt';
@@ -68,5 +69,11 @@ export const loginUser = TryCatch(async(req,res)=>{
         message: "Logged IN",
         user,
         token,
-    })
-})
+    });
+});
+
+export const myProfile = TryCatch(async(req:AuthenticatedRequest,res)=>{
+    const user = req.user;
+
+    res.json(user);
+});
