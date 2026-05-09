@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
+;
 const schema = new Schema({
     name: {
         type: String,
