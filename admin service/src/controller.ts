@@ -3,6 +3,7 @@ import TryCatch from "./TryCatch.js";
 import getBuffer from "./config/dataUri.js";
 import cloudinary from "cloudinary";
 import { sql } from "./config/db.js";
+import { redisClient } from "./index.js";
 
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -13,7 +14,7 @@ interface AuthenticatedRequest extends Request {
 
 export const addAlbum = TryCatch(async (req: AuthenticatedRequest, res) => {
   if (req.user?.role !== "admin") {
-    res.status(401).json({
+    res.status(403).json({
       message: "You are not Admin",
     });
     return;
@@ -47,6 +48,11 @@ export const addAlbum = TryCatch(async (req: AuthenticatedRequest, res) => {
     INSERT INTO albums (title, description, thumbnail) VALUES (${title}, ${description}, ${cloud.secure_url}) RETURNING *
     `;
 
+  if (redisClient.isReady) {
+    await redisClient.del("albums");
+    console.log("Cache Invalidatd for albums");
+  }
+
   res.json({
     message: "Album Created",
     album: result[0],
@@ -55,7 +61,7 @@ export const addAlbum = TryCatch(async (req: AuthenticatedRequest, res) => {
 
 export const addSong = TryCatch(async (req: AuthenticatedRequest, res) => {
   if (req.user?.role !== "admin") {
-    res.status(401).json({
+    res.status(403).json({
       message: "You are not Admin",
     });
     return;
@@ -97,16 +103,23 @@ export const addSong = TryCatch(async (req: AuthenticatedRequest, res) => {
   const result = await sql`
     INSERT INTO songs (title,description,audio, album_id) VALUES
     (${title}, ${description}, ${cloud.secure_url}, ${album})
+    RETURNING *
     `;
+
+  if (redisClient.isReady) {
+    await redisClient.del("songs");
+    console.log("Cache Invalidatd for songs");
+  }
 
   res.json({
     message: "Song Added",
+    song: result[0],
   });
 });
 
 export const addThumbnail = TryCatch(async (req: AuthenticatedRequest, res) => {
   if (req.user?.role !== "admin") {
-    res.status(401).json({
+    res.status(403).json({
       message: "You are not Admin",
     });
     return;
@@ -142,6 +155,10 @@ export const addThumbnail = TryCatch(async (req: AuthenticatedRequest, res) => {
   const result = await sql`
   UPDATE songs SET thumbnail = ${cloud.secure_url} WHERE id = ${req.params.id} RETURNING *
   `;
+  if (redisClient.isReady) {
+    await redisClient.del("songs");
+    console.log("Cache Invalidated for songs");
+  }
 
   res.json({
     message: "Thumbnail Added",
@@ -151,7 +168,7 @@ export const addThumbnail = TryCatch(async (req: AuthenticatedRequest, res) => {
 
 export const deleteAlbum = TryCatch(async (req: AuthenticatedRequest, res) => {
   if (req.user?.role !== "admin") {
-    res.status(401).json({
+    res.status(403).json({
       message: "You are not Admin",
     });
     return;
@@ -172,6 +189,12 @@ export const deleteAlbum = TryCatch(async (req: AuthenticatedRequest, res) => {
 
   await sql`DELETE FROM  albums WHERE id = ${id}`;
 
+  if (redisClient.isReady) {
+    await redisClient.del("albums");
+    await redisClient.del("songs");
+    console.log("Cache Invalidated for albums and songs");
+  }
+
   res.json({
     message: "Album deleted Successfully",
   });
@@ -179,13 +202,13 @@ export const deleteAlbum = TryCatch(async (req: AuthenticatedRequest, res) => {
 
 export const deleteSong = TryCatch(async (req: AuthenticatedRequest, res) => {
   if (req.user?.role !== "admin") {
-    res.status(401).json({
+    res.status(403).json({
       message: "You are not Admin",
     });
     return;
   }
 
-  const {id} = req.params;
+  const { id } = req.params;
 
   const song = await sql`SELECT * FROM songs WHERE id = ${id}`;
   if (song.length === 0) {
@@ -196,6 +219,11 @@ export const deleteSong = TryCatch(async (req: AuthenticatedRequest, res) => {
   }
 
   await sql`DELETE FROM songs WHERE id = ${id}`;
+
+  if (redisClient.isReady) {
+    await redisClient.del("songs");
+    console.log("Cache Invalidated for songs");
+  }
 
   res.json({
     message: "Song delete successfully",
