@@ -38,6 +38,9 @@ interface SongContextType {
   fetchSingleSong: () => Promise<void>;
   nextSong: () => void;
   prevSong: () => void;
+  albumSong: Song[];
+  albumData: Album | null;
+  fetchAlbumsSongs: (id: string) => Promise<void>;
 }
 
 const SongContext = createContext<SongContextType | undefined>(undefined);
@@ -82,38 +85,60 @@ export const SongProvider: React.FC<SongProviderProps> = ({ children }) => {
   }, [selectedSong]);
 
   const fetchAlbums = useCallback(async () => {
+    setLoading(true);
     try {
       const { data } = await axios.get<Album[]>(`${server}/api/v1/album/all`);
       setAlbums(data);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
-  },[]);
-  
+  }, []);
+
   const [index, setIndex] = useState<number>(0);
 
-  const nextSong = useCallback(()=>{
-    if(index === songs.length - 1){
+  const nextSong = useCallback(() => {
+    if (index === songs.length - 1) {
       setIndex(0);
       setSelectedSong(songs[0]?.id.toString());
-    }else{
-      setIndex((prevIndex)=> prevIndex + 1);
-      setSelectedSong(songs[index+1]?.id.toString());
+    } else {
+      setIndex((prevIndex) => prevIndex + 1);
+      setSelectedSong(songs[index + 1]?.id.toString());
     }
   }, [index, songs]);
 
-  const prevSong = useCallback(()=>{
-    if(index>0){
-      setIndex(prev=> prev-1);
-      setSelectedSong(songs[index-1]?.id.toString());
+  const prevSong = useCallback(() => {
+    if (index > 0) {
+      setIndex((prev) => prev - 1);
+      setSelectedSong(songs[index - 1]?.id.toString());
     }
-  }, [index, songs])
+  }, [index, songs]);
+
+  const [albumSong, setAlbumSong] = useState<Song[]>([]);
+  const [albumData, setAlbumData] = useState<Album | null >(null);
+
+  const fetchAlbumsSongs = useCallback(async(id: string)=>{
+    setLoading(true);
+    try {
+      const {data} = await axios.get<{songs: Song[]; album: Album}>(`${server}/api/v1/album/${id}`);
+
+      setAlbumData(data.album);
+      setAlbumSong(data.songs);
+    } catch (error) {
+      console.log(error);
+    }finally{
+      setLoading(false);
+    }
+  },[]);
 
   useEffect(() => {
-    fetchSongs();
-    fetchAlbums();
-  }, []);
+    const loadData = async () => {
+      await Promise.all([fetchSongs(), fetchAlbums()]);
+    };
 
+    loadData();
+  }, []);
   return (
     <SongContext.Provider
       value={{
@@ -128,6 +153,9 @@ export const SongProvider: React.FC<SongProviderProps> = ({ children }) => {
         song,
         nextSong,
         prevSong,
+        fetchAlbumsSongs,
+        albumData,
+        albumSong,
       }}
     >
       {" "}

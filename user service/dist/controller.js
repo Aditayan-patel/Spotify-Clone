@@ -1,7 +1,7 @@
 import { User } from "./model.js";
 import TryCatch from "./TryCatch.js";
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 export const registerUser = TryCatch(async (req, res) => {
     const { name, email, password } = req.body;
     let user = await User.findOne({ email });
@@ -54,5 +54,36 @@ export const loginUser = TryCatch(async (req, res) => {
 export const myProfile = TryCatch(async (req, res) => {
     const user = req.user;
     res.json(user);
+});
+export const addToPlayList = TryCatch(async (req, res) => {
+    const userId = req.user?._id;
+    const songId = req.params.id;
+    if (!songId || Array.isArray(songId)) {
+        res.status(400).json({
+            message: "Invalid song id",
+        });
+        return;
+    }
+    const user = await User.findById(userId);
+    if (!user) {
+        res.status(404).json({
+            message: "No User with this id",
+        });
+        return;
+    }
+    if (user.playlist.includes(songId)) {
+        const index = user.playlist.indexOf(songId);
+        user.playlist.splice(index, 1);
+        await user.save();
+        res.json({
+            message: "Removed from playlist",
+        });
+        return;
+    }
+    user.playlist.push(songId);
+    await user.save();
+    res.json({
+        message: "Added to playlist",
+    });
 });
 //# sourceMappingURL=controller.js.map

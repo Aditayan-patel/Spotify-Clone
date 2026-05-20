@@ -44,3 +44,27 @@ body {
     height: 0;
   }
 }
+
+.auth-input{
+  @apply w-full p-3 bg-gray-800 rounded-md border border-gray-700 focus:outline-none;
+  
+  border: 2px solid #374151;
+  transition: all 0.3s ease;
+}
+
+.auth-input:focus{
+  border: 2px solid transparent;
+   transition: all 0.3s ease;
+  background:
+    linear-gradient(#1f2937, #1f2937) padding-box,
+    linear-gradient(90deg, #16793b, #16a34a, #4ade80) border-box;
+}
+
+.auth-btn{
+  @apply w-full bg-green-500 text-black font-semibold py-3 rounded-full mt-4 transition-all duration-300;
+}
+
+.auth-btn:hover{
+  @apply bg-green-700;
+}
+

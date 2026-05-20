@@ -2,12 +2,13 @@ import Layout from "../components/Layout";
 import { useSongData } from "../context/SongContext";
 import AlbumCard from "../components/AlbumCard";
 import SongCard from "../components/SongCard";
+import Loading from "../components/Loading";
 
 const Home = () => {
-  const { albums, songs } = useSongData();
+  const { albums, songs , loading} = useSongData();
   return (
     <div >
-      <Layout>
+      { loading? (<Loading/> ): (<Layout>
         <div className="mb-4 ">
           <h1 className="my-5 font-bold text-2xl"> Featured charts</h1>
           <div className="flex overflow-auto gap-4">
@@ -40,7 +41,7 @@ const Home = () => {
             })}
           </div>
         </div>
-      </Layout>
+      </Layout>)}
     </div>
   );
 };

@@ -1,7 +1,14 @@
 import { useNavigate } from "react-router-dom";
+import { useUserData } from "../context/UserContext";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const {isAuth, logoutUser} = useUserData();
+
+  const logoutUserHanlder = ()=>{
+    logoutUser();
+  }
+
   return (
     <>
       <div className="w-full flex justify-between items-center font-semibold">
@@ -26,9 +33,11 @@ const Navbar = () => {
           <p className="px-4 py-1.5 bg-white text-black text-sm rounded-full hidden md:block cursor-pointer transition-shadow duration-300 hover:shadow-[0_0_25px_rgba(255,255,255,0.25)]">
             Install App
           </p>
-          <p className="px-4 py-1.5 bg-white text-black text-sm rounded-full cursor-pointer transition-shadow duration-300 hover:shadow-[0_0_25px_rgba(255,255,255,0.25)] ">
+          {isAuth ? (<p onClick={logoutUserHanlder} className="px-4 py-1.5 bg-white text-black text-sm rounded-full cursor-pointer transition-shadow duration-300 hover:shadow-[0_0_25px_rgba(255,255,255,0.25)] ">
             Logout
-          </p>
+          </p>) : ( <p onClick={()=>navigate("/login")} className="px-4 py-1.5 bg-white text-black text-sm rounded-full cursor-pointer transition-shadow duration-300 hover:shadow-[0_0_25px_rgba(255,255,255,0.25)] ">
+            Login
+          </p>)}
         </div>
       </div>
       <div className="flex items-center gap-3 mt-5">
