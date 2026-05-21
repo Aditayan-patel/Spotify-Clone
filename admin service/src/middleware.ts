@@ -51,7 +51,17 @@ import multer from 'multer'
 
 const storage = multer.memoryStorage();
 
-const uploadFile = multer({storage}).single("file");
+const upload = multer({ storage });
+
+const uploadFile = (req: Request, res: Response, next: NextFunction) => {
+  upload.single("file")(req, res, (err) => {
+    if (err) {
+      res.status(400).json({ message: err.message });
+      return;
+    }
+    next();
+  });
+};
 
 export default uploadFile;
 

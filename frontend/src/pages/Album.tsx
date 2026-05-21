@@ -36,9 +36,16 @@ const Album = () => {
 
   const handleBookmark = (songId: string) => {
     addToPlayList(songId);
+
     setSavedSongs((prev) => {
       const next = new Set(prev);
-      next.has(songId) ? next.delete(songId) : next.add(songId);
+
+      if (next.has(songId)) {
+        next.delete(songId);
+      } else {
+        next.add(songId);
+      }
+
       return next;
     });
   };
@@ -52,14 +59,21 @@ const Album = () => {
               <Loading />
             ) : (
               <div className="px-3 md:px-6 py-6 pb-32">
-
                 {/* ── Album Hero ── */}
-                <div className="relative rounded-2xl overflow-hidden mb-8 p-5 md:p-8 flex flex-col md:flex-row gap-5 md:gap-8 md:items-end"
-                  style={{ background: "linear-gradient(180deg, #1f1f1f 0%, #121212 100%)" }}
+                <div
+                  className="relative rounded-2xl overflow-hidden mb-8 p-5 md:p-8 flex flex-col md:flex-row gap-5 md:gap-8 md:items-end"
+                  style={{
+                    background:
+                      "linear-gradient(180deg, #1f1f1f 0%, #121212 100%)",
+                  }}
                 >
                   {/* Subtle top glow */}
-                  <div className="absolute top-0 left-0 right-0 h-32 pointer-events-none"
-                    style={{ background: "linear-gradient(180deg, rgba(29,185,84,0.08) 0%, transparent 100%)" }}
+                  <div
+                    className="absolute top-0 left-0 right-0 h-32 pointer-events-none"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, rgba(29,185,84,0.08) 0%, transparent 100%)",
+                    }}
                   />
 
                   {/* Thumbnail */}
@@ -86,21 +100,34 @@ const Album = () => {
 
                   {/* Meta */}
                   <div className="relative z-10 flex flex-col gap-2 md:gap-3 text-center md:text-left items-center md:items-start">
-                    <span className="text-xs font-bold tracking-widest uppercase"
-                      style={{ color: "#b3b3b3" }}>
+                    <span
+                      className="text-xs font-bold tracking-widest uppercase"
+                      style={{ color: "#b3b3b3" }}
+                    >
                       Playlist
                     </span>
-                    <h1 className="text-3xl md:text-5xl font-black leading-tight"
-                      style={{ color: "#fff", letterSpacing: "-0.5px" }}>
+                    <h1
+                      className="text-3xl md:text-5xl font-black leading-tight"
+                      style={{ color: "#fff", letterSpacing: "-0.5px" }}
+                    >
                       {albumData.title}
                     </h1>
-                    <p className="text-sm max-w-md"
-                      style={{ color: "#b3b3b3", lineHeight: 1.6 }}>
+                    <p
+                      className="text-sm max-w-md"
+                      style={{ color: "#b3b3b3", lineHeight: 1.6 }}
+                    >
                       {albumData.description}
                     </p>
                     <div className="flex items-center gap-2 mt-1">
-                      <img src="/logo.webp" alt="Logo" className="w-5 h-5 rounded-full" />
-                      <span className="text-sm font-medium" style={{ color: "#fff" }}>
+                      <img
+                        src="/logo.webp"
+                        alt="Logo"
+                        className="w-5 h-5 rounded-full"
+                      />
+                      <span
+                        className="text-sm font-medium"
+                        style={{ color: "#fff" }}
+                      >
                         {albumSong?.length ?? 0}
                         <span style={{ color: "#b3b3b3" }}> songs</span>
                       </span>
@@ -111,13 +138,18 @@ const Album = () => {
                 {/* ── Play All Button (mobile) ── */}
                 <div className="flex items-center gap-4 mb-4 px-2 md:hidden">
                   <button
-                    onClick={() => albumSong?.length && handlePlay(albumSong[0].id)}
+                    onClick={() =>
+                      albumSong?.length && handlePlay(albumSong[0].id)
+                    }
                     className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 active:scale-95"
                     style={{ background: "#1DB954" }}
                   >
                     <FaPlay size={16} color="#000" style={{ marginLeft: 3 }} />
                   </button>
-                  <span className="text-sm font-semibold" style={{ color: "#b3b3b3" }}>
+                  <span
+                    className="text-sm font-semibold"
+                    style={{ color: "#b3b3b3" }}
+                  >
                     Play all
                   </span>
                 </div>
@@ -150,15 +182,21 @@ const Album = () => {
                           onClick={() => handlePlay(song.id)}
                           className="group cursor-pointer rounded-md transition-colors duration-150"
                           style={{
-                            background: isActive ? "rgba(255,255,255,0.1)" : "transparent",
+                            background: isActive
+                              ? "rgba(255,255,255,0.1)"
+                              : "transparent",
                           }}
                           onMouseEnter={(e) => {
                             if (!isActive)
-                              (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.05)";
+                              (
+                                e.currentTarget as HTMLElement
+                              ).style.background = "rgba(255,255,255,0.05)";
                           }}
                           onMouseLeave={(e) => {
                             if (!isActive)
-                              (e.currentTarget as HTMLElement).style.background = "transparent";
+                              (
+                                e.currentTarget as HTMLElement
+                              ).style.background = "transparent";
                           }}
                         >
                           {/* ── DESKTOP ROW ── */}
@@ -169,16 +207,28 @@ const Album = () => {
                             {/* Index / playing indicator */}
                             <div className="flex items-center justify-center">
                               {isActive ? (
-                                <span style={{ color: "#1DB954", fontSize: 13, fontWeight: 600 }}>▶</span>
+                                <span
+                                  style={{
+                                    color: "#1DB954",
+                                    fontSize: 13,
+                                    fontWeight: 600,
+                                  }}
+                                >
+                                  ▶
+                                </span>
                               ) : (
-                                <span className="text-sm tabular-nums group-hover:hidden block"
-                                  style={{ color: "#b3b3b3" }}>
+                                <span
+                                  className="text-sm tabular-nums group-hover:hidden block"
+                                  style={{ color: "#b3b3b3" }}
+                                >
                                   {index + 1}
                                 </span>
                               )}
                               {!isActive && (
-                                <span className="text-sm hidden group-hover:block"
-                                  style={{ color: "#fff" }}>
+                                <span
+                                  className="text-sm hidden group-hover:block"
+                                  style={{ color: "#fff" }}
+                                >
                                   <FaPlay size={12} />
                                 </span>
                               )}
@@ -187,7 +237,11 @@ const Album = () => {
                             {/* Thumbnail + Title */}
                             <div className="flex items-center gap-3 min-w-0">
                               <img
-                                src={song.thumbnail ? song.thumbnail : "/custum thumbnail.webp"}
+                                src={
+                                  song.thumbnail
+                                    ? song.thumbnail
+                                    : "/custum thumbnail.webp"
+                                }
                                 className="w-10 h-10 rounded object-cover flex-shrink-0"
                                 alt={song.title}
                               />
@@ -200,7 +254,10 @@ const Album = () => {
                             </div>
 
                             {/* Description */}
-                            <p className="text-sm truncate" style={{ color: "#b3b3b3" }}>
+                            <p
+                              className="text-sm truncate"
+                              style={{ color: "#b3b3b3" }}
+                            >
                               {song.description.slice(0, 40)}...
                             </p>
 
@@ -221,13 +278,23 @@ const Album = () => {
                                     color: isSaved ? "#1DB954" : "#b3b3b3",
                                   }}
                                   onMouseEnter={(e) =>
-                                    ((e.currentTarget as HTMLElement).style.color = "#1DB954")
+                                    ((
+                                      e.currentTarget as HTMLElement
+                                    ).style.color = "#1DB954")
                                   }
                                   onMouseLeave={(e) =>
-                                    ((e.currentTarget as HTMLElement).style.color = isSaved ? "#1DB954" : "#b3b3b3")
+                                    ((
+                                      e.currentTarget as HTMLElement
+                                    ).style.color = isSaved
+                                      ? "#1DB954"
+                                      : "#b3b3b3")
                                   }
                                 >
-                                  {isSaved ? <FaBookmark size={14} /> : <FaRegBookmark size={14} />}
+                                  {isSaved ? (
+                                    <FaBookmark size={14} />
+                                  ) : (
+                                    <FaRegBookmark size={14} />
+                                  )}
                                 </button>
                               )}
 
@@ -236,22 +303,34 @@ const Album = () => {
                                 onClick={() => handlePlay(song.id)}
                                 className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-150 active:scale-95"
                                 style={{
-                                  background: isActive ? "#1DB954" : "rgba(255,255,255,0.1)",
+                                  background: isActive
+                                    ? "#1DB954"
+                                    : "rgba(255,255,255,0.1)",
                                   border: "none",
                                   cursor: "pointer",
                                   color: isActive ? "#000" : "#fff",
                                 }}
                                 onMouseEnter={(e) => {
-                                  (e.currentTarget as HTMLElement).style.background = "#1DB954";
-                                  (e.currentTarget as HTMLElement).style.color = "#000";
-                                  (e.currentTarget as HTMLElement).style.transform = "scale(1.1)";
+                                  (
+                                    e.currentTarget as HTMLElement
+                                  ).style.background = "#1DB954";
+                                  (e.currentTarget as HTMLElement).style.color =
+                                    "#000";
+                                  (
+                                    e.currentTarget as HTMLElement
+                                  ).style.transform = "scale(1.1)";
                                 }}
                                 onMouseLeave={(e) => {
-                                  (e.currentTarget as HTMLElement).style.background = isActive
+                                  (
+                                    e.currentTarget as HTMLElement
+                                  ).style.background = isActive
                                     ? "#1DB954"
                                     : "rgba(255,255,255,0.1)";
-                                  (e.currentTarget as HTMLElement).style.color = isActive ? "#000" : "#fff";
-                                  (e.currentTarget as HTMLElement).style.transform = "scale(1)";
+                                  (e.currentTarget as HTMLElement).style.color =
+                                    isActive ? "#000" : "#fff";
+                                  (
+                                    e.currentTarget as HTMLElement
+                                  ).style.transform = "scale(1)";
                                 }}
                               >
                                 <FaPlay size={11} style={{ marginLeft: 2 }} />
@@ -264,25 +343,40 @@ const Album = () => {
                             {/* Thumbnail */}
                             <div className="relative flex-shrink-0">
                               <img
-                                src={song.thumbnail ? song.thumbnail : "/custum thumbnail.webp"}
+                                src={
+                                  song.thumbnail
+                                    ? song.thumbnail
+                                    : "/custum thumbnail.webp"
+                                }
                                 className="w-12 h-12 rounded object-cover"
                                 alt={song.title}
                               />
                               {isActive && (
-                                <div className="absolute inset-0 rounded flex items-center justify-center"
-                                  style={{ background: "rgba(0,0,0,0.5)" }}>
-                                  <span style={{ color: "#1DB954", fontSize: 12 }}>▶</span>
+                                <div
+                                  className="absolute inset-0 rounded flex items-center justify-center"
+                                  style={{ background: "rgba(0,0,0,0.5)" }}
+                                >
+                                  <span
+                                    style={{ color: "#1DB954", fontSize: 12 }}
+                                  >
+                                    ▶
+                                  </span>
                                 </div>
                               )}
                             </div>
 
                             {/* Title + desc */}
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium truncate"
-                                style={{ color: isActive ? "#1DB954" : "#fff" }}>
+                              <p
+                                className="text-sm font-medium truncate"
+                                style={{ color: isActive ? "#1DB954" : "#fff" }}
+                              >
                                 {song.title}
                               </p>
-                              <p className="text-xs truncate mt-0.5" style={{ color: "#b3b3b3" }}>
+                              <p
+                                className="text-xs truncate mt-0.5"
+                                style={{ color: "#b3b3b3" }}
+                              >
                                 {song.description.slice(0, 30)}...
                               </p>
                             </div>
@@ -303,14 +397,20 @@ const Album = () => {
                                     color: isSaved ? "#1DB954" : "#b3b3b3",
                                   }}
                                 >
-                                  {isSaved ? <FaBookmark size={14} /> : <FaRegBookmark size={14} />}
+                                  {isSaved ? (
+                                    <FaBookmark size={14} />
+                                  ) : (
+                                    <FaRegBookmark size={14} />
+                                  )}
                                 </button>
                               )}
                               <button
                                 onClick={() => handlePlay(song.id)}
                                 className="w-9 h-9 rounded-full flex items-center justify-center active:scale-95"
                                 style={{
-                                  background: isActive ? "#1DB954" : "rgba(255,255,255,0.1)",
+                                  background: isActive
+                                    ? "#1DB954"
+                                    : "rgba(255,255,255,0.1)",
                                   border: "none",
                                   cursor: "pointer",
                                   color: isActive ? "#000" : "#fff",
@@ -322,7 +422,10 @@ const Album = () => {
                           </div>
 
                           {/* Divider — mobile only */}
-                          <div className="md:hidden mx-3" style={{ borderBottom: "1px solid #282828" }} />
+                          <div
+                            className="md:hidden mx-3"
+                            style={{ borderBottom: "1px solid #282828" }}
+                          />
                         </div>
                       );
                     })}

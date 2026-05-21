@@ -11,7 +11,7 @@ const PlayListCard = () => {
      <div className="ml-4 ">
         <h2>My Playlist</h2>
         <p className="text-gray-400 text-sm">
-            PlayList   • {isAuth? <span className="animate-pulse text-green-600 text-md font-bold">{user?.name}</span>  :<span className="animate-pulse text-green-600 text-md font-bold">{"User"}</span>}
+            PlayList   • {isAuth? <span className="animate-pulse text-green-400 text-md font-bold">{user?.name}</span>  :<span className="animate-pulse text-green-600 text-md font-bold">{"User"}</span>}
         </p>
      </div>
     </div>

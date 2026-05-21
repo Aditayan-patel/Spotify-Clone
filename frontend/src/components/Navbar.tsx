@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useUserData } from "../context/UserContext";
 
+
 const Navbar = () => {
   const navigate = useNavigate();
   const {isAuth, logoutUser} = useUserData();
@@ -41,7 +42,7 @@ const Navbar = () => {
         </div>
       </div>
       <div className="flex items-center gap-3 mt-5">
-        <p className="bg-white text-black px-4 py-1 rounded-2xl cursor-pointer">All</p>
+        <p className="bg-white text-black px-4 py-1 rounded-2xl cursor-pointer" onClick={()=>navigate("/")}>All</p>
         <p className="bg-white text-black px-4 py-1 rounded-2xl cursor-pointer hidden md:block">Music</p>
         <p className="bg-white text-black px-4 py-1 rounded-2xl cursor-pointer hidden md:block">Podcast</p>
         <p className="bg-white text-black px-4 py-1 rounded-2xl cursor-pointer md:hidden" onClick={()=>navigate("/playlist")}>Playlist</p>

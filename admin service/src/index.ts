@@ -4,12 +4,20 @@ import { sql } from "./config/db.js";
 import adminRoutes from "./route.js";
 import cloudinary from "cloudinary";
 import redis from "redis";
-import cors from 'cors';
+import cors from "cors";
+import multer from "multer"; // ← YEH MISSING THA
 
 dotenv.config();
 
-const redisPassword = process.env.REDIS_PASSWORD;
+const app = express(); // ← PEHLE app banao
 
+// Middlewares
+app.use(cors());
+app.use(express.json({ limit: "50mb" }));         // ← sirf ek baar, limit ke saath
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+
+// Redis
+const redisPassword = process.env.REDIS_PASSWORD;
 if (!redisPassword) {
   throw new Error("REDIS_PASSWORD is not defined in .env");
 }
@@ -27,29 +35,28 @@ redisClient
   .then(() => console.log("Connected to redis"))
   .catch(console.error);
 
-
+// Cloudinary
 cloudinary.v2.config({
   cloud_name: process.env.Cloud_Name!,
   api_key: process.env.Cloud_Api_key!,
   api_secret: process.env.Cloud_Api_Secret!,
+  timeout: 600000,
 });
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+// DB init
 async function initDB() {
   try {
     await sql`
-        CREATE TABLE IF NOT EXISTS albums(
+      CREATE TABLE IF NOT EXISTS albums(
         id SERIAL PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         description VARCHAR(255) NOT NULL,
         thumbnail VARCHAR(255) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-        `;
+      )
+    `;
     await sql`
-        CREATE TABLE IF NOT EXISTS songs(
+      CREATE TABLE IF NOT EXISTS songs(
         id SERIAL PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         description VARCHAR(255) NOT NULL,
@@ -57,10 +64,9 @@ async function initDB() {
         audio VARCHAR(255) NOT NULL,
         album_id INTEGER REFERENCES albums(id) ON DELETE SET NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-        `;
-
-    console.log("Database Initialized sucessfully");
+      )
+    `;
+    console.log("Database Initialized successfully");
   } catch (error) {
     console.log("Error initDb", error);
   }
@@ -72,6 +78,6 @@ const port = process.env.PORT;
 
 initDB().then(() => {
   app.listen(port, () => {
-    console.log(`server is running on port ${port}`);
+    console.log(`Server is running on port ${port}`);
   });
 });

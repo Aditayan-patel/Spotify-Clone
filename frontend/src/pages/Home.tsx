@@ -11,7 +11,7 @@ const Home = () => {
       { loading? (<Loading/> ): (<Layout>
         <div className="mb-4 ">
           <h1 className="my-5 font-bold text-2xl"> Featured charts</h1>
-          <div className="flex overflow-auto gap-4">
+          <div className="flex overflow-x-auto hide-horizontal-scroll gap-4">
             {albums?.map((e, i) => {
               return (
                 <AlbumCard
@@ -27,7 +27,7 @@ const Home = () => {
         </div>
         <div className="mb-4 ">
           <h1 className="my-5 font-bold text-2xl"> Today's Biggest Hits</h1>
-          <div className="flex overflow-auto gap-4">
+          <div className="flex overflow-x-auto hide-horizontal-scroll gap-4">
             {songs?.map((e, i) => {
               return (
                 <SongCard
