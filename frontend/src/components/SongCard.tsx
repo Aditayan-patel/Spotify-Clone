@@ -46,7 +46,7 @@ const SongCard: React.FC<SongCardProps> = ({ image, name, desc, id }) => {
           </div>
         </div>
 
-        <p className="font-bold mt-2 mb-1">{name}</p>
+        <p className="font-bold mt-2 mb-1">{name.length > 15 ? `${name.slice(0, 10)}...` : name}</p>
 
         <p className="text-slate-200 text-sm">
           {desc.length > 20 ? `${desc.slice(0, 20)}...` : desc}

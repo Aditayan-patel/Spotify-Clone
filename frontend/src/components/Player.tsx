@@ -138,7 +138,7 @@ const Player = () => {
       >
         {/* Audio element — key prop forces remount on new song src */}
         {song.audio && (
-          <audio ref={audioRef} src={song.audio} key={song.audio} />
+          <audio ref={audioRef} src={song.audio}  />
         )}
 
         {/* ── MOBILE LAYOUT ── */}
