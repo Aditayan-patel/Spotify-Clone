@@ -45,7 +45,7 @@ const Sidebar = () => {
         </div>
        {user && user.role === "admin" && <button
           className="px-5 py-1.5 bg-white text-black text-sm rounded-full mt-5 ml-6 cursor-pointer
-           animate-pulse  "
+             "
           onClick={() => navigate("/admin/dashboard")}
         >
           Admin Dashboard
