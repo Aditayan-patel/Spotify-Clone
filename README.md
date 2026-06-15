@@ -27,10 +27,10 @@ Built with **Microservices Architecture** — featuring a user-facing frontend, 
 ## 📸 Screenshots
 
 ### 🏠 Home Page
-![Home Page](public/screenshots/homepage.png)
+![Home Page](frontend/public/screenshots/home.png)
 
 ### 🛠️ Admin Dashboard
-![Admin Dashboard](public/screenshots/admin-dashboard.png)
+![Admin Dashboard](frontend/public/screenshots/admin.png)
 
 ---
 
